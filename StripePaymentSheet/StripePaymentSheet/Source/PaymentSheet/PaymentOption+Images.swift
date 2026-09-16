@@ -304,6 +304,8 @@ extension STPPaymentMethodType {
                 return .pm_type_shopeepay
             case .ngWallet:
                 return .pm_type_ng_wallet
+            case .qris:
+                return .pm_type_qris
             case .goPay:
                 return .pm_type_gopay
             case .grabPay:

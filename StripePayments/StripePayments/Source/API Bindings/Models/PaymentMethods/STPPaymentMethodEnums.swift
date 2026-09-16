@@ -132,6 +132,8 @@ import Foundation
     case shopeePay
     /// A Naira Wallet payment method
     case ngWallet
+    /// A QRIS payment method
+    case qris
     /// An unknown type.
     case unknown
 
@@ -260,6 +262,8 @@ import Foundation
             return "ShopeePay"
         case .ngWallet:
             return "Naira Wallet"
+        case .qris:
+            return "QRIS"
         case .goPay:
             return "GoPay"
         case .cardPresent,
@@ -393,6 +397,8 @@ import Foundation
             return "shopeepay"
         case .ngWallet:
             return "ng_wallet"
+        case .qris:
+            return "qris"
         case .goPay:
             return "gopay"
         }

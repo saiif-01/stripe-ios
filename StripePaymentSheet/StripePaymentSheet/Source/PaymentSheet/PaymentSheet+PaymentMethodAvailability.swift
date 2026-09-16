@@ -51,6 +51,7 @@ extension PaymentSheet {
         .sequra,
         .scalapay,
         .goPay,
+        .qris,
         .ngWallet,
         .shopeePay,
         .trueMoney,
