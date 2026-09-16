@@ -129,6 +129,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc public var scalapay: STPPaymentMethodScalapayParams?
     /// If this is a GoPay PaymentMethod, this contains additional details.
     @objc public var goPay: STPPaymentMethodGoPayParams?
+    /// If this is a Naira card PaymentMethod, this contains additional details.
+    @objc public var ngCard: STPPaymentMethodNgCardParams?
 
     /// Radar options that may contain HCaptcha token
     @objc @_spi(STP) public var radarOptions: STPRadarOptions?
@@ -926,6 +928,24 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         self.metadata = metadata
     }
 
+    /// Creates params for a Naira card PaymentMethod.
+    /// - Parameters:
+    ///   - ngCard:       An object containing additional Naira card details.
+    ///   - billingDetails: Billing information associated with the PaymentMethod.
+    ///   - metadata:       Additional information to attach to the PaymentMethod.
+    @objc
+    public convenience init(
+        ngCard: STPPaymentMethodNgCardParams,
+        billingDetails: STPPaymentMethodBillingDetails?,
+        metadata: [String: String]?
+    ) {
+        self.init()
+        self.type = .ngCard
+        self.ngCard = ngCard
+        self.billingDetails = billingDetails
+        self.metadata = metadata
+    }
+
     // MARK: - STPFormEncodable
     @objc
     public class func rootObjectName() -> String? {
@@ -979,6 +999,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             NSStringFromSelector(#selector(getter: sequra)): "sequra",
             NSStringFromSelector(#selector(getter: scalapay)): "scalapay",
             NSStringFromSelector(#selector(getter: goPay)): "gopay",
+            NSStringFromSelector(#selector(getter: ngCard)): "ng_card",
             NSStringFromSelector(#selector(getter: link)): "link",
             NSStringFromSelector(#selector(getter: radarOptions)): "radar_options",
             NSStringFromSelector(#selector(getter: metadata)): "metadata",
@@ -1442,6 +1463,8 @@ extension STPPaymentMethodParams {
             scalapay = STPPaymentMethodScalapayParams()
         case .goPay:
             goPay = STPPaymentMethodGoPayParams()
+        case .ngCard:
+            ngCard = STPPaymentMethodNgCardParams()
         case .cardPresent, .paynow, .zip, .konbini, .promptPay, .mbWay, .bizum:
             // These payment methods don't have any params
             break

@@ -116,6 +116,8 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     @objc private(set) public var scalapay: STPPaymentMethodScalapay?
     /// If this is a GoPay PaymentMethod, this contains additional details.
     @objc private(set) public var goPay: STPPaymentMethodGoPay?
+    /// If this is a Naira card PaymentMethod, this contains additional details.
+    @objc private(set) public var ngCard: STPPaymentMethodNgCard?
 
     /// This field indicates whether this payment method can be shown again to its customer in a checkout flow
     @objc private(set) public var allowRedisplay: STPPaymentMethodAllowRedisplay
@@ -198,6 +200,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
             "sequra = \(String(describing: sequra))",
             "scalapay = \(String(describing: scalapay))",
             "goPay = \(String(describing: goPay))",
+            "ngCard = \(String(describing: ngCard))",
             "liveMode = \(liveMode ? "YES" : "NO")",
             "allowRedisplay = \(allResponseFields["allow_redisplay"] as? String ?? "")",
             "type = \(allResponseFields["type"] as? String ?? "")",
@@ -422,6 +425,9 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         )
         paymentMethod.goPay = STPPaymentMethodGoPay.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "gopay")
+        )
+        paymentMethod.ngCard = STPPaymentMethodNgCard.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "ng_card")
         )
         return paymentMethod
     }

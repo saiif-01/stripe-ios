@@ -288,6 +288,8 @@ extension STPPaymentMethodType {
                 }
             case .FPX:
                 return .pm_type_fpx
+            case .ngCard:
+                return .pm_type_ng_card
             case .goPay:
                 return .pm_type_gopay
             case .grabPay:

@@ -152,6 +152,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case sek
         case chf
         case idr
+        case ngn
     }
 
     enum MerchantCountry: String, PickerEnum {

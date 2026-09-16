@@ -116,6 +116,8 @@ import Foundation
     case scalapay
     /// A GoPay payment method
     case goPay
+    /// A Naira card payment method
+    case ngCard
     /// An unknown type.
     case unknown
 
@@ -228,6 +230,8 @@ import Foundation
             return "SeQura"
         case .scalapay:
             return "Scalapay"
+        case .ngCard:
+            return "Naira card"
         case .goPay:
             return "GoPay"
         case .cardPresent,
@@ -345,6 +349,8 @@ import Foundation
             return "sequra"
         case .scalapay:
             return "scalapay"
+        case .ngCard:
+            return "ng_card"
         case .goPay:
             return "gopay"
         }
