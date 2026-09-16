@@ -130,6 +130,8 @@ import Foundation
     case trueMoney
     /// A ShopeePay payment method
     case shopeePay
+    /// A Naira Wallet payment method
+    case ngWallet
     /// An unknown type.
     case unknown
 
@@ -256,6 +258,8 @@ import Foundation
             return "TrueMoney"
         case .shopeePay:
             return "ShopeePay"
+        case .ngWallet:
+            return "Naira Wallet"
         case .goPay:
             return "GoPay"
         case .cardPresent,
@@ -387,6 +391,8 @@ import Foundation
             return "truemoney"
         case .shopeePay:
             return "shopeepay"
+        case .ngWallet:
+            return "ng_wallet"
         case .goPay:
             return "gopay"
         }

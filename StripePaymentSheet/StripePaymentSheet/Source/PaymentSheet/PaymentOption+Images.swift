@@ -302,6 +302,8 @@ extension STPPaymentMethodType {
                 return .pm_type_truemoney
             case .shopeePay:
                 return .pm_type_shopeepay
+            case .ngWallet:
+                return .pm_type_ng_wallet
             case .goPay:
                 return .pm_type_gopay
             case .grabPay:

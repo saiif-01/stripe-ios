@@ -835,6 +835,7 @@ public class STPPaymentHandler: NSObject {
             .touchNGo,
             .trueMoney,
             .shopeePay,
+            .ngWallet,
             .goPay,
             .alipay,
             .iDEAL,
