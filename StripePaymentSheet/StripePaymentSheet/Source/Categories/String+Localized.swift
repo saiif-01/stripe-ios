@@ -366,6 +366,13 @@ extension String.Localized {
         )
     }
 
+    static var touch_n_go_mandate_text: String {
+        STPLocalizedString(
+            "By confirming your payment with Touch 'n Go, you allow %@ to charge your Touch 'n Go account for future payments in accordance with their terms.",
+            "Touch 'n Go mandate text. The placeholder is the merchant's name."
+        )
+    }
+
     static var korean_payment_method_mandate_text: String {
         STPLocalizedString(
             "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms.",

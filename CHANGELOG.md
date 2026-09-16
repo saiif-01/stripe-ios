@@ -10,6 +10,7 @@ MINOR
 * [Added] Added `additionalHeaders` support to the `STPAPIClient` GET, POST, and DELETE APIs exposed through the `STP` SPI.
 
 ### PaymentSheet
+* [Added] Added Touch 'n Go API bindings and support for payments and setup in PaymentSheet.
 * [Added] Added GCash API bindings and support for payments and setup in PaymentSheet.
 * [Added] Added MoMo API bindings and support for payments and setup in PaymentSheet.
 * [Added] Added Naira bank transfer API bindings and support for payments in PaymentSheet.

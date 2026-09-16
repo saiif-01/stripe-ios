@@ -116,6 +116,8 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     @objc private(set) public var scalapay: STPPaymentMethodScalapay?
     /// If this is a GoPay PaymentMethod, this contains additional details.
     @objc private(set) public var goPay: STPPaymentMethodGoPay?
+    /// If this is a Touch 'n Go PaymentMethod, this contains additional details.
+    @objc private(set) public var touchNGo: STPPaymentMethodTouchNGo?
     /// If this is a GCash PaymentMethod, this contains additional details.
     @objc private(set) public var gcash: STPPaymentMethodGCash?
     /// If this is a MoMo PaymentMethod, this contains additional details.
@@ -206,6 +208,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
             "sequra = \(String(describing: sequra))",
             "scalapay = \(String(describing: scalapay))",
             "goPay = \(String(describing: goPay))",
+            "touchNGo = \(String(describing: touchNGo))",
             "gcash = \(String(describing: gcash))",
             "momo = \(String(describing: momo))",
             "ngBankTransfer = \(String(describing: ngBankTransfer))",
@@ -434,6 +437,9 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         )
         paymentMethod.goPay = STPPaymentMethodGoPay.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "gopay")
+        )
+        paymentMethod.touchNGo = STPPaymentMethodTouchNGo.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "touch_n_go")
         )
         paymentMethod.gcash = STPPaymentMethodGCash.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "gcash")
