@@ -129,6 +129,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc public var scalapay: STPPaymentMethodScalapayParams?
     /// If this is a GoPay PaymentMethod, this contains additional details.
     @objc public var goPay: STPPaymentMethodGoPayParams?
+    /// If this is a Naira bank transfer PaymentMethod, this contains additional details.
+    @objc public var ngBankTransfer: STPPaymentMethodNgBankTransferParams?
     /// If this is a Naira card PaymentMethod, this contains additional details.
     @objc public var ngCard: STPPaymentMethodNgCardParams?
 
@@ -928,6 +930,24 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         self.metadata = metadata
     }
 
+    /// Creates params for a Naira bank transfer PaymentMethod.
+    /// - Parameters:
+    ///   - ngBankTransfer:       An object containing additional Naira bank transfer details.
+    ///   - billingDetails: Billing information associated with the PaymentMethod.
+    ///   - metadata:       Additional information to attach to the PaymentMethod.
+    @objc
+    public convenience init(
+        ngBankTransfer: STPPaymentMethodNgBankTransferParams,
+        billingDetails: STPPaymentMethodBillingDetails?,
+        metadata: [String: String]?
+    ) {
+        self.init()
+        self.type = .ngBankTransfer
+        self.ngBankTransfer = ngBankTransfer
+        self.billingDetails = billingDetails
+        self.metadata = metadata
+    }
+
     /// Creates params for a Naira card PaymentMethod.
     /// - Parameters:
     ///   - ngCard:       An object containing additional Naira card details.
@@ -999,6 +1019,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             NSStringFromSelector(#selector(getter: sequra)): "sequra",
             NSStringFromSelector(#selector(getter: scalapay)): "scalapay",
             NSStringFromSelector(#selector(getter: goPay)): "gopay",
+            NSStringFromSelector(#selector(getter: ngBankTransfer)): "ng_bank_transfer",
             NSStringFromSelector(#selector(getter: ngCard)): "ng_card",
             NSStringFromSelector(#selector(getter: link)): "link",
             NSStringFromSelector(#selector(getter: radarOptions)): "radar_options",
@@ -1463,6 +1484,8 @@ extension STPPaymentMethodParams {
             scalapay = STPPaymentMethodScalapayParams()
         case .goPay:
             goPay = STPPaymentMethodGoPayParams()
+        case .ngBankTransfer:
+            ngBankTransfer = STPPaymentMethodNgBankTransferParams()
         case .ngCard:
             ngCard = STPPaymentMethodNgCardParams()
         case .cardPresent, .paynow, .zip, .konbini, .promptPay, .mbWay, .bizum:

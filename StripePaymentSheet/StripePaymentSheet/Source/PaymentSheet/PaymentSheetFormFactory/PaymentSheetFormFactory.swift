@@ -283,6 +283,8 @@ class PaymentSheetFormFactory {
                 return makeSepaDebit()
             case .ngCard:
                 return makeContactInformationAndBillingAddressForm(additionalElements: [makeNigerianPaymentMethodMandate()])
+            case .ngBankTransfer:
+                return makeContactInformationAndBillingAddressForm(additionalElements: [makeNigerianPaymentMethodMandate()])
             case .goPay, .grabPay, .paynow, .payPay, .mobilePay, .vipps, .zip, .crypto,
                  .billie, .sunbit, .alma, .payByBank, .payco, .sequra, .scalapay:
                 return makeContactInformationAndBillingAddressForm()
