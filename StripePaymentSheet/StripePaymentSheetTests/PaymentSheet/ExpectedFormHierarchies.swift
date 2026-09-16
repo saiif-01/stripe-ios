@@ -211,6 +211,16 @@ enum ExpectedFormHierarchy {
         }
     }
 
+    // MARK: - Mondu
+
+    enum Mondu {
+        static var paymentIntent: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SubtitleElement")
+            ])
+        }
+    }
+
     // MARK: - PAYCO
 
     enum Payco {
