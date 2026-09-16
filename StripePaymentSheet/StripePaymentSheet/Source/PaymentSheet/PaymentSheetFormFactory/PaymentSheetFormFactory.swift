@@ -295,6 +295,8 @@ class PaymentSheetFormFactory {
                 return makeContactInformationAndBillingAddressForm(additionalElements: [makeNigerianPaymentMethodMandate(terms: String.Localized.nigerian_wallet_terms)])
             case .ngUSSD:
                 return makeContactInformationAndBillingAddressForm(additionalElements: [makeNigerianPaymentMethodMandate()])
+            case .mondu:
+                return makeMondu()
             case .momo, .shopeePay, .qris, .goPay, .grabPay, .paynow, .payPay, .mobilePay, .vipps, .zip, .crypto,
                  .billie, .sunbit, .alma, .payByBank, .payco, .sequra, .scalapay:
                 return makeContactInformationAndBillingAddressForm()
@@ -888,6 +890,13 @@ extension PaymentSheetFormFactory {
         return makeDefaultsApplierWrapper(
             for: FormElement(autoSectioningElements: elements, theme: theme)
         )
+    }
+
+    func makeMondu() -> PaymentMethodElement {
+        let description = makeSectionTitleLabelWith(
+            text: String.Localized.mondu_invoice_message + "\n\n" + String.Localized.mondu_redirect_message
+        )
+        return makeContactInformationAndBillingAddressForm(additionalElements: [description])
     }
 
     func makeNaverPay() -> PaymentMethodElement {
