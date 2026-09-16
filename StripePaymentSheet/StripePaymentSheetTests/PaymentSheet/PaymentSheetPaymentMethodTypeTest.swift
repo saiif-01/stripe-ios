@@ -252,6 +252,37 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         }
     }
 
+    func testMomoRequiresReturnURLForPaymentAndSetup() {
+        // Given
+        let intents: [Intent] = [
+            ._testPaymentIntent(paymentMethodTypes: [.momo]),
+            ._testPaymentIntent(paymentMethodTypes: [.momo], setupFutureUsage: .offSession),
+            ._testSetupIntent(paymentMethodTypes: [.momo]),
+        ]
+
+        for intent in intents {
+            // When
+            let withoutReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: .momo,
+                configuration: makeConfiguration(),
+                intent: intent,
+                elementsSession: ._testValue(intent: intent),
+                supportedPaymentMethods: [.momo]
+            )
+            let withReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: .momo,
+                configuration: makeConfiguration(hasReturnURL: true),
+                intent: intent,
+                elementsSession: ._testValue(intent: intent),
+                supportedPaymentMethods: [.momo]
+            )
+
+            // Then
+            XCTAssertEqual(withoutReturnURL, .missingRequirements([.returnURL]))
+            XCTAssertEqual(withReturnURL, .supported)
+        }
+    }
+
     func testNgCardRequiresReturnURLForPaymentAndSetup() {
         // Given
         let intents: [Intent] = [

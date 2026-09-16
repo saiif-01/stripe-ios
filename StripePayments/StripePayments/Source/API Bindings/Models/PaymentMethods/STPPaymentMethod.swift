@@ -116,6 +116,8 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     @objc private(set) public var scalapay: STPPaymentMethodScalapay?
     /// If this is a GoPay PaymentMethod, this contains additional details.
     @objc private(set) public var goPay: STPPaymentMethodGoPay?
+    /// If this is a MoMo PaymentMethod, this contains additional details.
+    @objc private(set) public var momo: STPPaymentMethodMomo?
     /// If this is a Naira bank transfer PaymentMethod, this contains additional details.
     @objc private(set) public var ngBankTransfer: STPPaymentMethodNgBankTransfer?
     /// If this is a Naira card PaymentMethod, this contains additional details.
@@ -202,6 +204,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
             "sequra = \(String(describing: sequra))",
             "scalapay = \(String(describing: scalapay))",
             "goPay = \(String(describing: goPay))",
+            "momo = \(String(describing: momo))",
             "ngBankTransfer = \(String(describing: ngBankTransfer))",
             "ngCard = \(String(describing: ngCard))",
             "liveMode = \(liveMode ? "YES" : "NO")",
@@ -428,6 +431,9 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         )
         paymentMethod.goPay = STPPaymentMethodGoPay.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "gopay")
+        )
+        paymentMethod.momo = STPPaymentMethodMomo.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "momo")
         )
         paymentMethod.ngBankTransfer = STPPaymentMethodNgBankTransfer.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "ng_bank_transfer")
