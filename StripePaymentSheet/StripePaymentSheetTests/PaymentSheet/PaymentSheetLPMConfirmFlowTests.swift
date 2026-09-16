@@ -812,6 +812,15 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                expectedHierarchy: ExpectedFormHierarchy.TrueMoney.settingUp) { _ in }
     }
 
+    func testShopeePayConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "IDR",
+                               amount: 1000000,
+                               paymentMethodType: .shopeePay,
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.ShopeePay.paymentIntent) { _ in }
+    }
+
     func testPaycoConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "KRW",
