@@ -13,6 +13,7 @@ class PaymentSheetShopeePayUITests: PaymentSheetStandardLPMUICase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.customerMode = .new
+        settings.customerKeyType = .legacy
         settings.apmsEnabled = .off
         settings.applePayEnabled = .off
         settings.currency = .idr
