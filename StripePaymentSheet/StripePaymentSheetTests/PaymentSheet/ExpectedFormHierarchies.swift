@@ -129,6 +129,16 @@ enum ExpectedFormHierarchy {
         static var settingUp: FormHierarchyNode { paymentIntent }
     }
 
+    // MARK: - Naira bank transfer
+
+    enum NairaBankTransfer {
+        static var paymentIntent: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SimpleMandateElement", properties: ["text": "By confirming your payment, you agree that your tr..."])
+            ])
+        }
+    }
+
     // MARK: - PAYCO
 
     enum Payco {
