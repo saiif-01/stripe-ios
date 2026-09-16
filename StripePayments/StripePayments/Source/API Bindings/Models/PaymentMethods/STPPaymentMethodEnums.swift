@@ -134,6 +134,8 @@ import Foundation
     case ngWallet
     /// A QRIS payment method
     case qris
+    /// A Naira USSD payment method
+    case ngUSSD
     /// An unknown type.
     case unknown
 
@@ -264,6 +266,8 @@ import Foundation
             return "Naira Wallet"
         case .qris:
             return "QRIS"
+        case .ngUSSD:
+            return "Naira USSD"
         case .goPay:
             return "GoPay"
         case .cardPresent,
@@ -399,6 +403,8 @@ import Foundation
             return "ng_wallet"
         case .qris:
             return "qris"
+        case .ngUSSD:
+            return "ng_ussd"
         case .goPay:
             return "gopay"
         }
