@@ -51,6 +51,7 @@ extension PaymentSheet {
         .sequra,
         .scalapay,
         .goPay,
+        .trueMoney,
         .touchNGo,
         .gcash,
         .momo,
@@ -383,11 +384,11 @@ extension PaymentSheet {
 
     /// Payment method types that require mandate data for PaymentIntents when `setup_future_usage` is set
     static var requiresMandateDataForPaymentIntent: Set<STPPaymentMethodType> {
-        [.ngCard, .momo, .gcash, .touchNGo, .goPay, .alipay, .payPal, .cashApp, .revolutPay, .amazonPay, .klarna, .satispay, .twint, .kakaoPay, .naverPay, .krCard]
+        [.ngCard, .momo, .gcash, .touchNGo, .trueMoney, .goPay, .alipay, .payPal, .cashApp, .revolutPay, .amazonPay, .klarna, .satispay, .twint, .kakaoPay, .naverPay, .krCard]
     }
 
     /// Payment method types that require mandate data for SetupIntents
     static var requiresMandateDataForSetupIntent: Set<STPPaymentMethodType> {
-        [.ngCard, .momo, .gcash, .touchNGo, .goPay, .alipay, .payPal, .revolutPay, .satispay, .twint, .kakaoPay, .naverPay, .krCard]
+        [.ngCard, .momo, .gcash, .touchNGo, .trueMoney, .goPay, .alipay, .payPal, .revolutPay, .satispay, .twint, .kakaoPay, .naverPay, .krCard]
     }
 }

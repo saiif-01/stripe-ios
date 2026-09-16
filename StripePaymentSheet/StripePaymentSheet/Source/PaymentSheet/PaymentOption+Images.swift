@@ -298,6 +298,8 @@ extension STPPaymentMethodType {
                 return .pm_type_gcash
             case .touchNGo:
                 return .pm_type_touch_n_go
+            case .trueMoney:
+                return .pm_type_truemoney
             case .goPay:
                 return .pm_type_gopay
             case .grabPay:

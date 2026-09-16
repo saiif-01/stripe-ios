@@ -126,6 +126,8 @@ import Foundation
     case gcash
     /// A Touch 'n Go payment method
     case touchNGo
+    /// A TrueMoney payment method
+    case trueMoney
     /// An unknown type.
     case unknown
 
@@ -248,6 +250,8 @@ import Foundation
             return "GCash"
         case .touchNGo:
             return "Touch 'n Go"
+        case .trueMoney:
+            return "TrueMoney"
         case .goPay:
             return "GoPay"
         case .cardPresent,
@@ -375,6 +379,8 @@ import Foundation
             return "gcash"
         case .touchNGo:
             return "touch_n_go"
+        case .trueMoney:
+            return "truemoney"
         case .goPay:
             return "gopay"
         }
