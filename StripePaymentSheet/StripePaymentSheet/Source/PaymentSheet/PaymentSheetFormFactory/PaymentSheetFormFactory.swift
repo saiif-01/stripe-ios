@@ -291,7 +291,7 @@ class PaymentSheetFormFactory {
                 return makeContactInformationAndBillingAddressForm(additionalElements: makeSetupMandateElements(for: paymentMethod))
             case .trueMoney:
                 return makeContactInformationAndBillingAddressForm(additionalElements: makeSetupMandateElements(for: paymentMethod))
-            case .momo, .goPay, .grabPay, .paynow, .payPay, .mobilePay, .vipps, .zip, .crypto,
+            case .momo, .shopeePay, .goPay, .grabPay, .paynow, .payPay, .mobilePay, .vipps, .zip, .crypto,
                  .billie, .sunbit, .alma, .payByBank, .payco, .sequra, .scalapay:
                 return makeContactInformationAndBillingAddressForm()
             case .alipay:

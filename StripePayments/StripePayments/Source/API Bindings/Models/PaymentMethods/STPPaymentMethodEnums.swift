@@ -128,6 +128,8 @@ import Foundation
     case touchNGo
     /// A TrueMoney payment method
     case trueMoney
+    /// A ShopeePay payment method
+    case shopeePay
     /// An unknown type.
     case unknown
 
@@ -252,6 +254,8 @@ import Foundation
             return "Touch 'n Go"
         case .trueMoney:
             return "TrueMoney"
+        case .shopeePay:
+            return "ShopeePay"
         case .goPay:
             return "GoPay"
         case .cardPresent,
@@ -381,6 +385,8 @@ import Foundation
             return "touch_n_go"
         case .trueMoney:
             return "truemoney"
+        case .shopeePay:
+            return "shopeepay"
         case .goPay:
             return "gopay"
         }

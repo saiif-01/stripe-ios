@@ -300,6 +300,8 @@ extension STPPaymentMethodType {
                 return .pm_type_touch_n_go
             case .trueMoney:
                 return .pm_type_truemoney
+            case .shopeePay:
+                return .pm_type_shopeepay
             case .goPay:
                 return .pm_type_gopay
             case .grabPay:
