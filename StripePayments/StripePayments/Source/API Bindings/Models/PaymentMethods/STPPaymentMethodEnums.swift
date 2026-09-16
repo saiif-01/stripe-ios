@@ -122,6 +122,8 @@ import Foundation
     case ngBankTransfer
     /// A MoMo payment method
     case momo
+    /// A GCash payment method
+    case gcash
     /// An unknown type.
     case unknown
 
@@ -240,6 +242,8 @@ import Foundation
             return "Naira bank transfer"
         case .momo:
             return "MoMo"
+        case .gcash:
+            return "GCash"
         case .goPay:
             return "GoPay"
         case .cardPresent,
@@ -363,6 +367,8 @@ import Foundation
             return "ng_bank_transfer"
         case .momo:
             return "momo"
+        case .gcash:
+            return "gcash"
         case .goPay:
             return "gopay"
         }

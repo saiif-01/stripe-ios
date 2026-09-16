@@ -129,6 +129,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc public var scalapay: STPPaymentMethodScalapayParams?
     /// If this is a GoPay PaymentMethod, this contains additional details.
     @objc public var goPay: STPPaymentMethodGoPayParams?
+    /// If this is a GCash PaymentMethod, this contains additional details.
+    @objc public var gcash: STPPaymentMethodGCashParams?
     /// If this is a MoMo PaymentMethod, this contains additional details.
     @objc public var momo: STPPaymentMethodMomoParams?
     /// If this is a Naira bank transfer PaymentMethod, this contains additional details.
@@ -932,6 +934,24 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         self.metadata = metadata
     }
 
+    /// Creates params for a GCash PaymentMethod.
+    /// - Parameters:
+    ///   - gcash:       An object containing additional GCash details.
+    ///   - billingDetails: Billing information associated with the PaymentMethod.
+    ///   - metadata:       Additional information to attach to the PaymentMethod.
+    @objc
+    public convenience init(
+        gcash: STPPaymentMethodGCashParams,
+        billingDetails: STPPaymentMethodBillingDetails?,
+        metadata: [String: String]?
+    ) {
+        self.init()
+        self.type = .gcash
+        self.gcash = gcash
+        self.billingDetails = billingDetails
+        self.metadata = metadata
+    }
+
     /// Creates params for a MoMo PaymentMethod.
     /// - Parameters:
     ///   - momo:       An object containing additional MoMo details.
@@ -1039,6 +1059,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             NSStringFromSelector(#selector(getter: sequra)): "sequra",
             NSStringFromSelector(#selector(getter: scalapay)): "scalapay",
             NSStringFromSelector(#selector(getter: goPay)): "gopay",
+            NSStringFromSelector(#selector(getter: gcash)): "gcash",
             NSStringFromSelector(#selector(getter: momo)): "momo",
             NSStringFromSelector(#selector(getter: ngBankTransfer)): "ng_bank_transfer",
             NSStringFromSelector(#selector(getter: ngCard)): "ng_card",
@@ -1505,6 +1526,8 @@ extension STPPaymentMethodParams {
             scalapay = STPPaymentMethodScalapayParams()
         case .goPay:
             goPay = STPPaymentMethodGoPayParams()
+        case .gcash:
+            gcash = STPPaymentMethodGCashParams()
         case .momo:
             momo = STPPaymentMethodMomoParams()
         case .ngBankTransfer:
