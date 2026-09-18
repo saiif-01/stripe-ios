@@ -644,6 +644,29 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         XCTAssertEqual(event.metadata.url, "https://stripe.com")
     }
 
+    // MARK: - Vulnerability Demonstration: Off-site Navigation Retains Privileged Handlers
+
+    @MainActor
+    func testScriptMessageHandlerRespondsToOffSiteOrigin() async throws {
+        let componentManager = EmbeddedComponentManager(apiClient: .init(publishableKey: "test_key"), fetchClientSecret: {
+            return "acs_test_secret_12345"
+        })
+        let webVC = ConnectComponentWebViewController(componentManager: componentManager,
+                                                      componentType: .payouts,
+                                                      loadContent: false,
+                                                      analyticsClientFactory: MockComponentAnalyticsClient.init,
+                                                      didFailLoadWithError: { _ in })
+
+        // 1. Simulate web view navigation to an off-site origin
+        webVC.webViewDidFinishNavigation(to: URL(string: "https://attacker.com/portal")!)
+
+        // 2. Invoke fetchClientSecret from the off-site origin
+        // Demonstrates that native bridge executes and returns secret without origin verification
+        try await webVC.webView.evaluateMessageWithReply(name: "fetchClientSecret",
+                                                         json: "{}",
+                                                         expectedResponse: "acs_test_secret_12345")
+    }
+
     // MARK: - Process Termination
 
     @MainActor

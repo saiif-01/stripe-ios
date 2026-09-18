@@ -1,0 +1,25 @@
+name: Vulnerability Reproduction PoC
+
+on:
+  push:
+    branches:
+      - 'poc/**'
+  workflow_dispatch:
+
+jobs:
+  test-offsite-bridge:
+    name: StripeConnect Off-Site Origin Validation Defect
+    runs-on: macos-14
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+
+      - name: Execute Live End-to-End PoC Test
+        run: |
+          bundle exec ruby ci_scripts/run_tests.rb --test StripeConnectTests/ConnectComponentWebViewControllerTests/testScriptMessageHandlerRespondsToOffSiteOrigin
