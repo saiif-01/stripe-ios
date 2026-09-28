@@ -22,4 +22,4 @@ jobs:
 
       - name: Execute Live End-to-End PoC Test
         run: |
-          bundle exec ruby ci_scripts/run_tests.rb --test StripeConnectTests/ConnectComponentWebViewControllerTests/testScriptMessageHandlerRespondsToOffSiteOrigin
+          bundle exec ruby ci_scripts/run_tests.rb --test StripeConnectTests/ConnectComponentWebViewControllerTests/testCrossOriginPageGenuinelyLoadsAndInvokesNativeBridge
